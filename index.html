@@ -1,0 +1,70 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SignUp</title>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <script defer src="js/bootstrap.js"></script>
+</head>
+<body>
+    <div class="container mt-5 py-5">
+        <div class="alert alert-success text-center" id="Success" style="display: none;">Registration Sucessful</div>
+        <div class="alert alert-danger text-center" id="EmptySpaces" style="display: none;">Pls fill up the empty spaces</div>
+        <h1 class="text-center fs-3">Sign Up</h1>
+        <div class="form-floating my-2">
+            <input type="text" class="form-control" id="studentName" placeholder="Enter your name">
+            <label for="studentName">Enter your name</label>
+        </div>
+        <div class="form-floating my-2">
+            <input type="email" class="form-control" id="studentEmail" placeholder="Enter your name">
+            <label for="studentEmail">Enter your email</label>
+        </div>
+        <div class="">
+            <button class="w-100 btn btn-success mb-2" onclick="addInfo()">Sign Up</button>
+        </div>
+        <div class="alert alert-danger text-center fs-5 fw-bolder" id="noStudent">No student has signed up</div>
+    </div>
+
+    <script>
+        studentArr = [];
+        function addInfo(){
+            studentObj = {
+                student_Name: studentName.value,
+                student_Email: studentEmail.value,
+                success : function(){
+                    document.getElementById("Success").style.display = "block"
+                },
+                dismisSuccess : function(){
+                    document.getElementById("Success").style.display = "none"
+                },
+                dismisStudent : function(){
+                    document.getElementById("noStudent").style.display = "none"
+                },
+                fillUp: function(){
+                    document.getElementById("EmptySpaces").style.display = "block"
+                },
+                dismissFillUp: function(){
+                    document.getElementById("EmptySpaces").style.display = "none"
+                }
+            }
+            if(studentName.value && studentEmail.value){
+                studentArr.push(studentObj);
+                console.log(studentObj);
+                localStorage.setItem("studentInfo", JSON.stringify(studentArr));
+                studentName.value = '';
+                studentEmail.value = '';
+                studentObj.dismisStudent();
+                studentObj.dismissFillUp();
+                studentObj.success();
+                window.location.href = 'signin.html'
+            }
+            else{
+                studentObj.fillUp();
+                studentObj.dismisSuccess();
+                console.log("its  not working")
+            }
+        }
+    </script>
+</body>
+</html>

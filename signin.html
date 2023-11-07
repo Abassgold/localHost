@@ -1,0 +1,118 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signin</title>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <script defer src="js/bootstrap.js"></script>
+</head>
+<body onload="showInfo()">
+    <div class="container">
+        <div class="alert alert-danger text-center mb-1" id="fillUp" style="display: none;">Fill up empty spaces</div>
+        <div class="alert alert-success text-center mb-1" id="success" style="display: none;">Success</div>
+        <h1 class="text-center text-decoration-underline text-primary">Show Info</h1>
+        <div class="container-fluid mx-auto">
+            <div class="row justify-content-center align-items-center" id="displayInfo">
+    
+            </div>
+        </div>
+    </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="form-floating my-2">
+                <input type="text" class="form-control" id="studentName" placeholder="Enter your name">
+                <label for="studentName">Enter your name</label>
+            </div>
+            <div class="form-floating my-2">
+                <input type="email" class="form-control" id="studentEmail" placeholder="Enter your name">
+                <label for="studentEmail">Enter your email</label>
+            </div>
+            <div class="form-floating my-2">
+                <input type="number" class="form-control" id="studentIndex" placeholder="Enter Index">
+                <label for="studentIndex">Enter your Index</label>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" onclick="editInfo()">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+    
+
+    <script>
+        var allInfo = [];
+        function showInfo(){
+            if(localStorage.studentInfo){
+                allInfo = JSON.parse(localStorage.getItem("studentInfo"))
+                for(i=0; i < allInfo.length; i++){
+                    displayInfo.innerHTML +=
+                    `
+                    <div class="col-sm-6">
+                        <div class="card">
+                          <div class="card-body">
+                            <h5 class="card-title">${allInfo[i].student_Name}</h5>
+                            <p class="card-text">${allInfo[i].student_Email}</p>
+                            <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Edit</a>
+                            <a href="#" class="btn btn-primary" onclick="deleteInfo(${i})">Delete</a>
+                          </div>
+                        </div>
+                      </div>
+                    `
+                }
+            }
+            else{
+                allInfo = [];
+            }
+        }
+        function deleteInfo(index){
+            allInfo.splice(index, 1);
+            showInfo();
+            console.log(allInfo)
+        }
+        function editInfo(edit){
+            var studentObj = {
+                student_Name: studentName.value,
+                student_Email: studentEmail.value,
+                success: function(){
+                    document.getElementById("success").style.display = "block"
+                },
+                dismisSuccess: function(){
+                    document.getElementById("success").style.display = "none"
+                },
+                fillUp: function(){
+                    document.getElementById("fillUp").style.display = "block"
+                },
+                dismissFillUp: function(){
+                    document.getElementById("fillUp").style.display = "none"
+                }
+            };
+            var index = studentIndex.value;
+            if(studentName.value && studentEmail.value && studentIndex.value){
+                allInfo.splice(index-1, 1, studentObj);
+                studentEmail.value = '';
+                studentName.value = '';
+                studentIndex.value = '';
+                studentObj.success();
+                studentObj.dismissFillUp();
+                console.log(allInfo.length)
+            }
+            else{
+                studentObj.dismisSuccess();
+                studentObj.fillUp();
+            }
+            showInfo();
+        }
+    </script>
+</body>
+</html>
